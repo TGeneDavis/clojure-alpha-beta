@@ -50,7 +50,7 @@
 
 (defn my-scorer
   [x]
-  (first x))
+  x)
 
 (defn my-terminal?
   [x] 
@@ -74,10 +74,15 @@
       scorer     ;;leaf-score-finder
       terminal?) ;;terminal
     
-    (is (= 5 (ab/initial-call
-               '(5)         ;;origin-node
-               0         ;;depth
-               true))))) ;;is-alpha))
+    (def root-node (with-meta '(5) {:source "root"}))
+    
+    (def best-score (ab/initial-call
+                      root-node         ;;origin-node
+                      0         ;;depth
+                      true))
+    
+    (is (= 5 (first best-score))) ;;is-alpha
+    (is (= "root" (:source (meta best-score)))))) ;;is-alpha
 
 
 (deftest one-ply-min-tree
@@ -92,10 +97,10 @@
       terminal?) ;;terminal
   
     
-    (is (= 1 (ab/initial-call
-               '((5) (7) (1))         ;;origin-node
-               1         ;;depth
-               false))))) ;;is-alpha))
+    (is (= 1 (first (ab/initial-call
+                      '((5) (7) (1))         ;;origin-node
+                      1         ;;depth
+                      false)))))) ;;is-alpha))
 
 
 (deftest one-ply-max-tree
@@ -110,10 +115,10 @@
       terminal?) ;;terminal
   
     
-    (is (= 7 (ab/initial-call
-               '((5) (7) (1))         ;;origin-node
-               1         ;;depth
-               true))))) ;;is-alpha))
+    (is (= 7 (first (ab/initial-call
+                      '((5) (7) (1))         ;;origin-node
+                      1         ;;depth
+                      true)))))) ;;is-alpha))
           
 
 (deftest two-max-ply-tree
@@ -128,10 +133,10 @@
       terminal?) ;;terminal
   
     
-    (is (= 3 (ab/initial-call
-               '(((6) (3) (16)) ((-17) (10) (-5)) ((-14) (-10) (-18)))         ;;origin-node
-               2         ;;depth
-               true))))) ;;is-alpha))
+    (is (= 3 (first (ab/initial-call
+                      '(((6) (3) (16)) ((-17) (10) (-5)) ((-14) (-10) (-18)))         ;;origin-node
+                      2         ;;depth
+                      true)))))) ;;is-alpha))
           
 
 (deftest two-min-ply-tree
@@ -146,10 +151,10 @@
       terminal?) ;;terminal
   
     
-    (is (= -10 (ab/initial-call
-                 '(((6) (3) (16)) ((-17) (10) (-5)) ((-14) (-10) (-18)))         ;;origin-node
-                 2         ;;depth
-                 false))))) ;;is-alpha))
+    (is (= -10 (first (ab/initial-call
+                        '(((6) (3) (16)) ((-17) (10) (-5)) ((-14) (-10) (-18)))         ;;origin-node
+                        2         ;;depth
+                        false)))))) ;;is-alpha))
           
 
 (deftest three-max-ply-tree
@@ -164,20 +169,18 @@
       terminal?) ;;terminal
   
     
-    (is (= 5 (ab/initial-call
-               '((((6) (-4) (-14)) 
-                  ((16) (-7) (15)) 
-                  ((-3) (1) (1)))
-                    
-                 (((8) (1) (6))
-                  ((13) (-14) (-10))
-                  ((-8) (-17) (-17)))
-                   
-                 (((5) (5) (17))
-                  ((6) (-14) (16))
-                  ((-2) (-1) (5))))  ;; origin node 
-               3                     ;;depth
-               true)))))             ;;is-alpha
+    (is (= 5 (first (ab/initial-call
+                      '((((6) (-4) (-14)) 
+                         ((16) (-7) (15)) 
+                         ((-3) (1) (1)))
+                        (((8) (1) (6))
+                         ((13) (-14) (-10))
+                         ((-8) (-17) (-17)))
+                        (((5) (5) (17))
+                         ((6) (-14) (16))
+                         ((-2) (-1) (5))))  ;; origin node 
+                       3                    ;;depth
+                       true))))))           ;;is-alpha
           
           
 
@@ -193,20 +196,20 @@
       terminal?) ;;terminal
   
     
-    (is (= -3 (ab/initial-call
-                '((((6) (-4) (-14))
-                   ((16) (-7) (15)) 
-                   ((-3) (1) (1)))
-                    
-                  (((8) (1) (6))
-                   ((13) (-14) (-10))
-                   ((-8) (-17) (-17)))
-                    
-                  (((5) (5) (17))
-                   ((6) (-14) (16))
-                   ((-2) (-1) (5))))  ;; origin node 
-               3                      ;;depth
-               false)))))             ;;is-alpha
+    (is (= -3 (first (ab/initial-call
+                       '((((6) (-4) (-14))
+                          ((16) (-7) (15)) 
+                          ((-3) (1) (1)))
+                       
+                         (((8) (1) (6))
+                          ((13) (-14) (-10))
+                          ((-8) (-17) (-17)))
+                       
+                         (((5) (5) (17))
+                          ((6) (-14) (16))
+                          ((-2) (-1) (5))))  ;; origin node 
+                        3                    ;;depth
+                        false))))))          ;;is-alpha
 
 
 

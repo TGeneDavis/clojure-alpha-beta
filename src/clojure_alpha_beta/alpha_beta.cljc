@@ -57,8 +57,27 @@
 
 
 
-(def neg-infinity -2000000000)
-(def pos-infinity 2000000000)
+(def neg-infinity (with-meta '(-2000000000) {:source "root"}))
+(def pos-infinity (with-meta '(2000000000) {:source "root"}))
+
+(defn min-score
+  "Takes two seqs with first element being a long value."
+  [x y]
+  (if (= (first x) (min (first x) (first y)))
+    x
+    y))
+
+(defn max-score
+  "Takes two seqs with first element being a long value."
+  [x y]
+  (if (= (first x) (max (first x) (first y)))
+    x
+    y))
+
+(defn >-score
+  "Takes two seqs with first element being a long value."
+  [x y]
+  (> (first x) (first y)))
 
 
 (declare abnode);;avoid ciclic reference issues
@@ -78,12 +97,12 @@
          node (first branches)
          next-branches (rest branches)
          current-alpha best-alpha]
-    (let [v2 (max 
+    (let [v2 (max-score 
                v1
                (abnode node (dec search-depth) current-alpha best-beta false))]
 
-      (let [new-alpha (max best-alpha v2)]
-        (if (and (> best-beta new-alpha) (first next-branches))
+      (let [new-alpha (max-score best-alpha v2)]
+        (if (and (>-score best-beta new-alpha) (first next-branches))
           (recur 
             v2 
             (first next-branches)
@@ -106,12 +125,12 @@
          next-branches (rest branches)
          current-beta best-beta]
 
-    (let [v2 (min 
+    (let [v2 (min-score 
                v1
                (abnode node (dec search-depth) best-alpha current-beta true))]
 
-      (let [new-beta (min best-beta v2)]
-        (if (and (> new-beta best-alpha) (first next-branches))
+      (let [new-beta (min-score best-beta v2)]
+        (if (and (>-score new-beta best-alpha) (first next-branches))
           (recur 
             v2 
             (first next-branches)
