@@ -35,12 +35,6 @@ Clojure and ClojureScript.
 
 Also, I've added some tests to ensure the algorithm is implmented correctly.
 
-I'm planning on adding more algorithms to this library. This is just
-a start.
-
-Look for more information at https://makeonlinegames.com/ once I've written up
-a tutorial or two.
-
 
 ## Usage
 
